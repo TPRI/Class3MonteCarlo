@@ -19,6 +19,9 @@ class monte_carlo(object):
         # Count n particles
         n = sum(density)
 
+        if any(density < 0):
+            raise ValueError("Density should be positive")
+
         # Select particle at random
         nSelect = random_integers(n)
 
