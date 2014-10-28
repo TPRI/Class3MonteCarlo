@@ -25,14 +25,6 @@ def test_particle_number_is_conserved():
     n_new = sum(mc.random_move(density))
     assert_equal(n,n_new,"particle number not conserved")
 
-# TODO review test_one_particle_is_moved
-# def test_one_particle_is_moved():
-#     mc = MonteCarlo()
-#     density = random_integers(100, size=10)
-#     density_new = mc.random_move(density)
-#     difference = density - density_new
-#     print difference
-
 # compare_energy tests
 
 def test_compare_energies():
@@ -43,11 +35,11 @@ def test_compare_energies():
 
 # compare_boltzmann_factor tests
 
-def test_compare_boltzman_factor_equal():
+def test_compare_boltzmann_factor_equal():
     mc = MonteCarlo()
     assert_true(mc.compare_boltzmann_factor(1,1))
 
-def test_compare_boltzman_factor_high_t():
+def test_compare_boltzmann_factor_high_t():
     mc = MonteCarlo(10000000000)
     assert_true(mc.compare_boltzmann_factor(100,1))
 
@@ -79,4 +71,23 @@ def test_density_input():
     densities = [[0],[0,0,0,0]]
     for density in densities:
        with assert_raises(ValueError) as exception: mc.random_move(density)
+
+def test_main_iteration_particle_number_is_conserved():
+
+    from mock import Mock
+
+    mc = MonteCarlo()
+
+    energies = [1, 2, 3, 4]
+    energy = Mock(side_effect=energies)
+
+    density = random_integers(100, size=100)
+    n = sum(density)
+    result = mc.iteration(density, energy)
+    new_density = result[0]
+    n_new = sum(new_density)
+    assert_equal(n, n_new, "particle number not conserved")
+
+
+
 
