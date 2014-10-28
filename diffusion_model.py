@@ -1,3 +1,5 @@
+__author__ = 'Timothy Rose-Innes'
+
 def energy(density, coeff=1.0):
     """ Energy function associated with the particle configuration
 
