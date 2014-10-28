@@ -3,6 +3,18 @@ __author__ = 'Timothy Rose-Innes'
 class MonteCarlo(object):
 
     def __init__(self, temp=10, iterations=1000):
+
+        #Check inputs
+
+        if temp <= 0:
+            raise ValueError("Temperature should be *positive*")
+
+        if iterations <= 0:
+            raise ValueError("Iterations should be *positive*")
+
+        if type(iterations) != int:
+            raise TypeError("Number of Iterations should be an *integer*.")
+
         self.temp = temp
         self.iterations = iterations
 
@@ -24,7 +36,7 @@ class MonteCarlo(object):
             raise ValueError("Density should be positive")
 
         if density.dtype != 'i':
-            raise ValueError("Density should be an integer")
+            raise TypeError("Density should be an integer")
 
         if n == 0:
             raise ValueError("Densities should not be all zero")
@@ -116,7 +128,7 @@ class MonteCarlo(object):
         while i < self.iterations:
             [density, en] = self.iteration(density, energy)
             i += 1
-            print [density, en, i]
+            #print [density, en, i]
 
 
 
