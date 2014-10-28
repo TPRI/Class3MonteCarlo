@@ -2,7 +2,7 @@ __author__ = 'Timothy Rose-Innes'
 
 class monte_carlo(object):
 
-    def __init__(self, temp):
+    def __init__(self, temp=10):
         self.temp = temp
 
     # Randomly move a particle
@@ -22,14 +22,20 @@ class monte_carlo(object):
         if any(density < 0):
             raise ValueError("Density should be positive")
 
+        if density.dtype != 'i':
+            raise ValueError("Density should be an integer")
+
+        if n == 0:
+            raise ValueError("Densities should not be all zero")
+
         # Select particle at random
-        nSelect = random_integers(n)
+        n_select = random_integers(n)
 
         #Count over particles up to n until reaching correct element
         count = 0
         i = -1
 
-        while count < nSelect:
+        while count < n_select:
             i += 1
             count += density[i]
 
@@ -46,22 +52,26 @@ class monte_carlo(object):
 
         return density
 
-        # Compare initial and final energies
-        # def compare_energies(self, density, density_new, energy):
-        # if energy lower
-        #   return true
-        # else
-        #   return false
+    # Compare initial and final energies
+    def compare_energy(self, en, en_new):
+
+        if en_new < en:
+            return True
+        else:
+            return False
 
     # Method Compare Boltzmann Factor
-    # def compare_boltzmann_factor(self, density, density_new, energy):
-    # Calculate Boltzmann factor P1 between E0 and E1
-    # Compare to a random number P0 ??? What should the range be ???
-    # if P0 > P1
-	#   return true
-    # else
-    #   return false
+    def compare_boltzmann_factor(self, en, en_new):
 
+        from numpy import exp
+        from numpy.random import uniform
+
+        boltz = exp(-(en_new - en)/self.temp)
+
+        if boltz > uniform():
+            return True
+        else:
+            return False
 
 # Method: Main (energy, density, iterations, temperature)
    # Create Monte Carlo Sim Object
