@@ -1,6 +1,8 @@
 from monte_carlo import monte_carlo
-from nose.tools import assert_equal, assert_raises
+from nose.tools import assert_equal, assert_raises, assert_true, assert_false
 from numpy.random import random_integers
+
+#random_move tests
 
 def test_fails_for_negative_densities():
     mc = monte_carlo()
@@ -30,4 +32,20 @@ def test_particle_number_is_conserved():
 #     difference = density - density_new
 #     print difference
 
+# compare_energy tests
 
+def test_compare_energies():
+    mc = monte_carlo()
+    assert_true(mc.compare_energy(2,1))
+    assert_false(mc.compare_energy(1,2))
+    assert_false(mc.compare_energy(1,1))
+
+# compare_boltzmann_factor tests
+
+def test_compare_boltzman_factor_equal():
+    mc = monte_carlo()
+    assert_true(mc.compare_boltzmann_factor(1,1))
+
+def test_compare_boltzman_factor_high_t():
+    mc = monte_carlo(10000000000)
+    assert_true(mc.compare_boltzmann_factor(100,1))
