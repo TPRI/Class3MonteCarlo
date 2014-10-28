@@ -1,9 +1,10 @@
 __author__ = 'Timothy Rose-Innes'
 
-class monte_carlo(object):
+class MonteCarlo(object):
 
-    def __init__(self, temp=10):
+    def __init__(self, temp=10, iterations=1000):
         self.temp = temp
+        self.iterations = iterations
 
     # Randomly move a particle
     def random_move(self, density):
@@ -73,10 +74,49 @@ class monte_carlo(object):
         else:
             return False
 
-# Method: Main (energy, density, iterations, temperature)
-   # Create Monte Carlo Sim Object
-   # Compute E0
-   # Call move random
-   # Compute E1
-   # Call Compare Energies
-   # Iterate
+    def iteration(self, density, energy):
+
+        en = energy(density)
+
+        density_new = self.random_move(density)
+
+        en_new = energy(density_new)
+
+        if self.compare_energy(en, en_new):
+            return [density_new, en_new]
+        elif self.compare_boltzmann_factor(en, en_new):
+            return [density_new, en_new]
+        else:
+            return [density, en]
+
+
+    def __call__(self, density_initial, energy):
+
+        #Imports
+        from numpy import array
+
+        # Check density_initial
+
+        #Assign density list to an numpy array
+        density_initial = array(density_initial)
+
+        if density_initial.ndim != 1:
+            raise ValueError("Density should be an a *1-dimensional* array.")
+
+        if any(density_initial < 0):
+            raise ValueError("Density should be an array of *positive integers*.")
+
+        if density_initial.dtype.kind != 'i' and len(density_initial) > 0:
+            raise TypeError("Density should be an array of *integers*.")
+
+        i = 0
+
+        density = density_initial
+
+        while i < self.iterations:
+            [density, en] = self.iteration(density, energy)
+            i += 1
+            print [density, en, i]
+
+
+
