@@ -1,11 +1,11 @@
 __author__ = 'Timothy Rose-Innes'
 
 class MonteCarlo(object):
+    """ A Simple Monte Carlo Algorithm"""
 
     def __init__(self, temp=10, iterations=1000):
 
-        #Check inputs
-
+        # Check inputs
         if temp <= 0:
             raise ValueError("Temperature should be *positive*")
 
@@ -16,10 +16,13 @@ class MonteCarlo(object):
             raise TypeError("Number of Iterations should be an *integer*.")
 
         self.temp = temp
-        self.iterations = iterations
+        """ Temperature to run simulation """
 
-    # Randomly move a particle
+        self.iterations = iterations
+        """ Number of iterations """
+
     def random_move(self, density):
+        """ Move a randomly selected particle left or right """
 
         # Imports
         from numpy import array, sum
@@ -32,6 +35,7 @@ class MonteCarlo(object):
         # Count n particles
         n = sum(density)
 
+        # Check density
         if any(density < 0):
             raise ValueError("Density should be positive")
 
@@ -44,7 +48,7 @@ class MonteCarlo(object):
         # Select particle at random
         n_select = random_integers(n)
 
-        #Count over particles up to n until reaching correct element
+        # Count over particles until the correct element is reached
         count = 0
         i = -1
 
@@ -52,10 +56,10 @@ class MonteCarlo(object):
             i += 1
             count += density[i]
 
-        #Subtract 1 from selected particle position
+        # Subtract 1 from initial particle position
         density[i] -= 1
 
-        #Add 1 particle to new position
+        # Add 1 particle to new position
         if i == 0:
             density[1] += 1
         elif i == len(density) - 1:
@@ -65,35 +69,42 @@ class MonteCarlo(object):
 
         return density
 
-    # Compare initial and final energies
     def compare_energy(self, en, en_new):
+        """  Return True if the new energy is less than the initial energy """
 
         if en_new < en:
             return True
         else:
             return False
 
-    # Method Compare Boltzmann Factor
     def compare_boltzmann_factor(self, en, en_new):
+        """  Compare Boltzmann factor against a uniform distribution """
 
         from numpy import exp
         from numpy.random import uniform
 
+        # Boltzmann factor
         boltz = exp(-(en_new - en)/self.temp)
 
+        # Compare against a uniform distribution
         if boltz > uniform():
             return True
         else:
             return False
 
     def iteration(self, density, energy):
+        """ A single iteration of the Monte Carlo Algorithm """
 
+        # Initial energy
         en = energy(density)
 
+        # Randomly move a particle
         density_new = self.random_move(density)
 
+        # The new energy
         en_new = energy(density_new)
 
+        # Decide if to accept change
         if self.compare_energy(en, en_new):
             return [density_new, en_new]
         elif self.compare_boltzmann_factor(en, en_new):
@@ -103,15 +114,14 @@ class MonteCarlo(object):
 
 
     def __call__(self, density_initial, energy):
+        """ Implements the main Monte Carlo Algorithm """
 
-        #Imports
         from numpy import array
 
-        # Check density_initial
-
-        #Assign density list to an numpy array
+        #Assign density list to a numpy array
         density_initial = array(density_initial)
 
+        # Check initial density
         if density_initial.ndim != 1:
             raise ValueError("Density should be an a *1-dimensional* array.")
 
@@ -121,14 +131,17 @@ class MonteCarlo(object):
         if density_initial.dtype.kind != 'i' and len(density_initial) > 0:
             raise TypeError("Density should be an array of *integers*.")
 
+        # Set iterator to 0
         i = 0
 
         density = density_initial
 
+        # Loop through the iterations
         while i < self.iterations:
             [density, en] = self.iteration(density, energy)
             i += 1
-            #print [density, en, i]
+            # print density
+            # Can add output here
 
 
 
