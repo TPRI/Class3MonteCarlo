@@ -4,6 +4,7 @@ class MonteCarlo(object):
     """ A Simple Monte Carlo Algorithm"""
 
     def __init__(self, temp=10, iterations=1000):
+        # NOTE TO SELF: the __init__ method, class instantiation  automatically invokes __init__
 
         # Check inputs
         if temp <= 0:
@@ -115,6 +116,7 @@ class MonteCarlo(object):
 
     def __call__(self, density_initial, energy):
         """ Implements the main Monte Carlo Algorithm """
+        # NOTE TO SELF: the __call__ method allows a class instance to be callable (called as a function)
 
         from numpy import array
 
